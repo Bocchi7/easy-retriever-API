@@ -24,7 +24,7 @@ tar zxvf elasticsearch-8.15.1.tar.gz
 cd elasticsearch-8.15.1
 ```
 
-Elasticsearch8.x与Elasticsearch7.x相比的一个重大不同是默认情况下会有各种安全性验证。因为很麻烦所以作者选择将安全性验证关掉，具体做法是：打开`config/elasticsearch.yml`，将所有`enabled: `后的`true`改成`false`。如果您有在安全方面的需求，您需要对本仓库代码进行一点修改，使之适应安全性验证。
+Elasticsearch8.x与Elasticsearch7.x相比的一个重大不同是默认情况下会有各种安全性验证。因为很麻烦所以作者选择将安全性验证关掉，具体做法是：打开`config/elasticsearch.yml`，将所有`enabled: `后的`true`改成`false`。如果您有在安全方面的需求，您需要对本仓库代码进行一点修改，使之适应安全性验证。upd：有人反馈看不到`enabled: `之类的配置，解决方法是先运行服务端（命令行输入`bin/elasticsearch`），等到服务端程序稳定运行（输出信息暂时不增加）后关闭服务端，再打开`config/elasticsearch.yml`。这可能是因为Elasticsearch第一次运行会进行一下初始化步骤，我们要修改的相关信息可能在初始化步骤中才会生成。
 
 Elasticsearch中内置的分词器不支持中文。为了使之支持中文，本仓库采用了[ik分词器](https://github.com/infinilabs/analysis-ik)插件。安装操作如下：
 ```bash
