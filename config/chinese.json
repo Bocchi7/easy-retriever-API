@@ -1,0 +1,18 @@
+{
+    "settings":{
+        "analysis":{
+            "analyzer":{
+                "chinese":{
+                    "type": "ik_max_word"
+                }
+            }
+        }
+    },
+    "language": "chinese",
+    "batch_size": 512,
+    "chunk_size": 16384,
+    "thread_count": 16,
+    "use_dense": true,
+    "embedding_model_name_or_path": "../models/bge-base-zh-v1.5",
+    "reranker_model_name_or_path": "../models/bge-reranker-base"
+}

@@ -1,0 +1,11 @@
+{
+    "index_name": "stard",
+    "config_path": "../config/chinese.json",
+    "method": "dense",
+    "query_path": "../data/STARD/eval.jsonl",
+    "server": "http://localhost:9200",
+    "rerank": true,
+    "coarse_filtered_count": 100,
+    "kNN_num_candidates": 10000,
+    "filtered_count": 10
+}

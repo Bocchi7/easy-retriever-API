@@ -1,0 +1,7 @@
+{
+    "data_path": "../data/STARD/psgs.jsonl",
+    "index_name": "stard",
+    "config_path": "../config/chinese.json",
+    "server": "http://localhost:9200",
+    "override": true
+}

@@ -1,0 +1,9 @@
+{
+    "index_name": "stard",
+    "config_path": "../config/chinese.json",
+    "method": "BM25",
+    "query_path": "../data/STARD/eval.jsonl",
+    "server": "http://localhost:9200",
+    "rerank": false,
+    "filtered_count": 10
+}
