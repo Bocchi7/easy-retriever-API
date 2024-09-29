@@ -4,6 +4,6 @@
     "load_chunk_size": 65536,
     "load_thread_count": 16,
     "use_dense": true,
-    "embedding_model_name_or_path": "../models/bge-base-en-v1.5",
-    "reranker_model_name_or_path": "../models/bge-reranker-base"
+    "embedding_model_name_or_path": 'BAAI/bge-base-en-v1.5',
+    "reranker_model_name_or_path": 'BAAI/bge-reranker-base'
 }
