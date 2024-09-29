@@ -24,25 +24,25 @@ tar zxvf elasticsearch-8.15.1.tar.gz
 cd elasticsearch-8.15.1
 ```
 
-Elasticsearch8.x与Elasticsearch7.x相比的一个重大不同是默认情况下会有各种安全性验证。因为很麻烦所以作者选择将安全性验证关掉，具体做法是：打开`/config/elasticsearch.yml`，将所有`enabled: `后的`true`改成`false`。如果您有在安全方面的需求，您需要对本仓库代码进行一点修改，使之适应安全性验证。
+Elasticsearch8.x与Elasticsearch7.x相比的一个重大不同是默认情况下会有各种安全性验证。因为很麻烦所以作者选择将安全性验证关掉，具体做法是：打开`config/elasticsearch.yml`，将所有`enabled: `后的`true`改成`false`。如果您有在安全方面的需求，您需要对本仓库代码进行一点修改，使之适应安全性验证。
 
 Elasticsearch中内置的分词器不支持中文。为了使之支持中文，本仓库采用了[ik分词器](https://github.com/infinilabs/analysis-ik)插件。安装操作如下：
 ```bash
 bin/elasticsearch-plugin install https://get.infini.cloud/elasticsearch/analysis-ik/8.15.1
 ```
 
-关于这个插件具体该怎么用，您可以去对应仓库查看教程。本仓库提供了一种简单的使用方法，您可以在（项目根目录下）`config/chinese.json`中看到相关的配置，但作者建议若不是很了解可以暂时不要改动它。
+关于这个插件具体该怎么用，您可以去对应仓库查看教程。本仓库提供了一种简单的使用方法，您可以在（项目根目录下）`config/chinese.json`中看到相关的配置，但作者建议若不是很了解则暂时不要改动它。
 
-以上Elasticsearch服务端就安装完成了，接着服务端：（如果之前你有些步骤不小心跳过了然后不得不重新补上，那么服务端记得重启）
+以上Elasticsearch服务端就安装完成了，接着启动服务端：（如果之前你有些步骤不小心跳过了然后不得不重新补上，那么服务端记得重启）
 ```bash
 bin/elasticsearch
 ```
-如果需要，您可以用`nohup`指令让服务端在后台运行。这样做的好处是和服务端交互的命令行窗口被关闭后程序仍能保持运行，坏处是中断服务端程序不是很方便，您将需要手动找到相应进程号并尝试中断它。
+如果需要，您可以用`nohup`指令让服务端在后台运行。这样做的好处是和服务端交互的命令行窗口被关闭后程序仍能保持运行，坏处是中断服务端程序不是很方便，您将需要手动找到相应进程号并中断它。
 ```bash
 nohup bin/elasticsearch &
 ```
 
-然后您可能还需要安装BGE模型用于稠密检索，作者采用并尝试过的模型有：
+然后您可能还需要安装BGE模型用于稠密向量检索，作者尝试过的模型有：
 1. [BAAI/bge-base-en-v1.5](https://huggingface.co/BAAI/bge-base-en-v1.5)：英文的文本编码器模型。用于检索阶段中生成文本的向量表示。
 2. [BAAI/bge-base-zh-v1.5](https://huggingface.co/BAAI/bge-base-zh-v1.5)：中文的文本编码器模型。用于检索阶段中生成文本的向量表示。
 3. [BAAI/bge-reranker-base](https://huggingface.co/BAAI/bge-reranker-base)：同时支持中文和英文的交叉编码模型。用于重排阶段中生成文档与询问的相关性分数。
@@ -54,7 +54,7 @@ nohup bin/elasticsearch &
 
 ## 运行
 
-API的核心代码已经封装在了`src/utils.py`的`IndexWrapper`类中。作者建议在`IndexWrapper`的基础上实现您的需求。另外可以直接调用`src/build.py`和`src/search.py`分别实现建立索引和查询的操作，这两个脚本都是对`IndexWrapper`特定功能的简单封装。
+API的核心代码已经封装在了`src/utils.py`的`IndexWrapper`类中，作者建议在`IndexWrapper`的基础上实现您的需求，您可以直接查看代码以了解各函数的参数和返回值。另外可以直接调用`src/build.py`和`src/search.py`分别实现建立索引和查询的操作，这两个脚本都是对`IndexWrapper`特定功能的简单封装。
 
 默认的配置文件在`config/`中，您可以直接使用它们，或者视情况修改。其中`config/chinese.json`中，`settings`属性和`language`属性（涉及到ik分词器的调用）不要随意更改，若不了解其作用。配置中其它部分的介绍：
 
@@ -68,7 +68,7 @@ API的核心代码已经封装在了`src/utils.py`的`IndexWrapper`类中。作�
 | reranker_model_name_or_path  | 交叉编码器模型的名字或路径。                                 | 如果是名字（比如`BAAI/bge-reranker-base`则尝试从网上加载模型 |
 
 
-这里提供了一个小规模的数据集供您上手操作。数据集取自[STARD](https://github.com/oneal2000/STARD)，采用了其中全部的文档和部分查询，并整理成了适合于本仓库代码操作的格式。数据集见`/data/STARD`。以下是在此数据集基础上的简单操作：
+这里提供了一个小规模的数据集供您上手操作。数据集取自[STARD](https://github.com/oneal2000/STARD)，采用了其中全部的文档和部分查询，并整理成了适合于本仓库代码操作的格式。数据集见`/data/STARD`。以下是在此数据集基础上的简单操作。
 
 您可以快捷地运行`src/build.py`以建立索引：
 ```bash
@@ -83,9 +83,9 @@ python search.py --args_path ../args/search_args/search_stard_BM25.json > output
 ```bash
 python search.py --args_path ../args/search_args/search_stard_dense.json > output_dense.txt
 ```
-`src/search.py`的输出格式是`json`格式下的列表套列表套对象。最外层列表是顺序显示各询问的输出结果，每个输出结果是表示一系列返回的文档的列表，列表中每个元素是个包含`id`、`text`、`score`属性的对象。其中`score`属性表示相关性得分。每个询问的输出结果已经根据相关性得分倒序排序。
+`src/search.py`的输出格式是`json`格式下的列表套列表套对象。最外层列表是顺序显示各询问的输出结果，每个输出结果是表示一系列返回的文档的列表，列表中每个元素是个包含`id`、`text`、`score`属性的对象表示相应文档的信息。其中`score`属性表示相关性得分。每个询问的输出结果已经根据相关性得分倒序排序。
 
-`args/`下的各文件表示这些脚本运行的参数。这里解读一下各参数的含义。
+`args/`下的各文件表示这些脚本运行的参数。您运行`src/build.py`和`src/search.py`时也可以直接在命令行中输入各参数。这里解读一下各参数的含义。
 
 `src/build.py`用到的参数文件中各属性如下：
 | 属性        | 描述                                                         | 备注 |
